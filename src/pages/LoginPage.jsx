@@ -24,8 +24,9 @@ export default function LoginPage() {
     setError('');
     try {
       const res = await authService.login(data);
-      login(res.data.token, res.data.data);
-      localStorage.setItem('token', res.data.token);
+      const token = res.data.token || res.data.access_token;
+      const user = res.data.data;
+      login(token, user);
       navigate('/');
     } catch (err) {
       setError(err.response?.data?.message || 'Login gagal.');

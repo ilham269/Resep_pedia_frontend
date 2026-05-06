@@ -98,7 +98,10 @@ export default function SubmitRecipePage() {
     if (data.tags) fd.append('tags', JSON.stringify(data.tags.split(',').map(t => t.trim()).filter(Boolean)));
     if (coverFile) fd.append('cover_image', coverFile);
 
-    submitRecipe(fd, { onSuccess: () => { setStep(1); navigate('/dashboard'); } });
+    submitRecipe(fd, {
+      onSuccess: () => { setStep(1); navigate('/dashboard'); },
+      onError: (err) => console.error('Submit error:', JSON.stringify(err.response?.data, null, 2)),
+    });
   };
 
   return (

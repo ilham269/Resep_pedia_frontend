@@ -7,13 +7,26 @@ export const useAuthStore = create(
       user: null,
       token: null,
       isAuthenticated: false,
-      login: (token, user) => set({ token, user, isAuthenticated: true }),
+      login: (token, user) => {
+        // Simpan token juga di localStorage biasa untuk interceptor
+        localStorage.setItem('token', token);
+        set({ token, user, isAuthenticated: true });
+      },
       logout: () => {
         localStorage.removeItem('token');
+        localStorage.removeItem('auth-storage');
         set({ token: null, user: null, isAuthenticated: false });
       },
       setUser: (user) => set({ user }),
     }),
-    { name: 'auth-storage', partialize: (s) => ({ token: s.token, user: s.user, isAuthenticated: s.isAuthenticated }) }
+    {
+      name: 'auth-storage',
+      // Simpan semua termasuk token
+      partialize: (s) => ({
+        token: s.token,
+        user: s.user,
+        isAuthenticated: s.isAuthenticated,
+      }),
+    }
   )
 );
